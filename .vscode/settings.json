@@ -27,6 +27,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
 },
 "cSpell.words": [
-    "ehthumbs"
+  "appendonly",
+  "ehthumbs",
+  "healthcheck",
+  "PGDATA",
+  "timescaledb"
 ]
 }

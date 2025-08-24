@@ -1,0 +1,41 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg17
+    container_name: iot-monitor-timescaledb
+    environment:
+      - POSTGRES_DB=iot_monitor
+      - POSTGRES_USER=iot_user
+      - POSTGRES_PASSWORD=iot_password
+      - PGDATA=/pgdata
+    ports:
+      - '5432:5432'
+    volumes:
+      - timescaledb_data:/pgdata
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U iot_user -d iot_monitor']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Optional: Redis for caching (common in IoT applications)
+  redis:
+    image: redis:7-alpine
+    container_name: iot-monitor-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+volumes:
+  timescaledb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
